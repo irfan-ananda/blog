@@ -2,24 +2,28 @@ package org.acme.model;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.*;
+
 
 @Entity
 @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p ORDER BY p.id")
 public class Post {
 	
-	private Long id;
-	private String title;
-	private String content;
-	private List<Tag> tags;
-	
     @Id
     @SequenceGenerator(name = "postSeq", sequenceName = "post_id_seq", allocationSize = 1, initialValue = 1)
     @GeneratedValue(generator = "postSeq")
+	private Long id;
+	private String title;
+	private String content;
+	
+	@ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+        name = "Post_Tag", 
+        joinColumns = { @JoinColumn(name = "post_id") }, 
+        inverseJoinColumns = { @JoinColumn(name = "tag_id") }
+    )
+	private List<Tag> tags;
+	
 	public Long getId() {
 		return id;
 	}
