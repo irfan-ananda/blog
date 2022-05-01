@@ -9,15 +9,15 @@ import javax.persistence.*;
 public class Tag {
 	
     @Id
-    @SequenceGenerator(name = "postSeq", sequenceName = "post_id_seq", allocationSize = 1, initialValue = 1)
-    @GeneratedValue(generator = "postSeq")
+    @SequenceGenerator(name = "tagSeq", sequenceName = "tag_id_seq", allocationSize = 1, initialValue = 1)
+    @GeneratedValue(generator = "tagSeq")
 	private long id;
 	
     @Column(unique = true)
 	private String label;
 	
 	@ManyToMany(mappedBy = "tags")
-	private List<Post> posts;
+    private List<Post> posts;
 	
 	public long getId() {
 		return id;
@@ -25,11 +25,11 @@ public class Tag {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public String getNamge() {
+	public String getLabel() {
 		return label;
 	}
-	public void setNamge(String namge) {
-		this.label = namge;
+	public void setLabel(String label) {
+		this.label = label;
 	}
 	public List<Post> getPosts() {
 		return posts;

@@ -1,5 +1,6 @@
 package org.acme.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -16,14 +17,32 @@ public class Post {
 	private String title;
 	private String content;
 	
-	@ManyToMany(cascade = { CascadeType.ALL })
+
+	@ManyToMany(targetEntity = Tag.class, cascade = {CascadeType.ALL})
     @JoinTable(
         name = "Post_Tag", 
         joinColumns = { @JoinColumn(name = "post_id") }, 
-        inverseJoinColumns = { @JoinColumn(name = "tag_id") }
+        inverseJoinColumns = { @JoinColumn(name = "tag_label") }
     )
 	private List<Tag> tags;
+    
+    public Post() {    	
+    }
 	
+	public Post(PostDTO postDTO) {
+		this.title = postDTO.getTitle();
+		this.content = postDTO.getContent();
+		this.tags = new ArrayList<>();
+		if (postDTO.getTags() != null) {
+			if (postDTO.getTags() != null) {
+				for (String label : postDTO.getTags()) {		
+					Tag tag = new Tag();
+					tag.setLabel(label);
+					this.tags.add(tag);
+				}
+			}
+		}
+	}
 	public Long getId() {
 		return id;
 	}
