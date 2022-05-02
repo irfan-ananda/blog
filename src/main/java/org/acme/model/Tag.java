@@ -1,8 +1,10 @@
 package org.acme.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
+
 
 @Entity
 @NamedQuery(name = "Tag.findAll", query = "SELECT t FROM Tag t ORDER BY t.id")
@@ -16,8 +18,9 @@ public class Tag {
     @Column(unique = true)
 	private String label;
 	
-	@ManyToMany(mappedBy = "tags")
-    private List<Post> posts;
+	@ManyToMany(mappedBy = "tags", cascade = {CascadeType.MERGE})
+    private List<Post> posts = new ArrayList<>();
+	
 	
 	public long getId() {
 		return id;

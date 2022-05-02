@@ -2,8 +2,10 @@ package org.acme.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.*;
+
 
 
 @Entity
@@ -17,29 +19,31 @@ public class Post {
 	private String title;
 	private String content;
 	
-
-	@ManyToMany(targetEntity = Tag.class, cascade = {CascadeType.ALL})
+	@ManyToMany(targetEntity = Tag.class, cascade = {CascadeType.MERGE})
     @JoinTable(
         name = "Post_Tag", 
         joinColumns = { @JoinColumn(name = "post_id") }, 
         inverseJoinColumns = { @JoinColumn(name = "tag_label") }
     )
-	private List<Tag> tags;
+	private List<Tag> tags = new ArrayList<>();;
     
     public Post() {    	
     }
 	
-	public Post(PostDTO postDTO) {
+	public Post(PostDTO postDTO, Map<String, Long> tagMap) {
 		this.title = postDTO.getTitle();
 		this.content = postDTO.getContent();
 		this.tags = new ArrayList<>();
 		if (postDTO.getTags() != null) {
-			if (postDTO.getTags() != null) {
-				for (String label : postDTO.getTags()) {		
-					Tag tag = new Tag();
-					tag.setLabel(label);
-					this.tags.add(tag);
-				}
+			for (String label : postDTO.getTags()) {		
+				Tag tag = new Tag();
+				Long i =  tagMap.get(label);
+				System.out.println("=======");
+				System.out.println("label: " + i);
+				tag.setLabel(label);		
+				if (i != null)
+					tag.setId(i);
+				this.tags.add(tag);
 			}
 		}
 	}
