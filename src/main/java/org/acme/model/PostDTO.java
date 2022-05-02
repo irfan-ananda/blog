@@ -7,7 +7,7 @@ public class PostDTO {
 	
 	private String title;
 	private String content;
-	private List<String> tags;
+	private List<String> tags =  new ArrayList<>();
 	
 	public PostDTO() {		
 	}
@@ -15,15 +15,13 @@ public class PostDTO {
 	public PostDTO(Post post) {
 		this.title = post.getTitle();
 		this.content = post.getContent();
-		this.tags = new ArrayList<>();
 		if (post.getTags() != null) {
-			if (post.getTags() != null) {
-				for (Tag t : post.getTags()) {			
-					this.tags.add(t.getLabel());
-				}
+			for (Tag t : post.getTags()) {			
+				this.tags.add(t.getLabel());
 			}
 		}
 	}
+	
 	public String getTitle() {
 		return title;
 	}

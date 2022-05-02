@@ -11,6 +11,7 @@ import javax.ws.rs.*;
 import org.acme.model.Post;
 import org.acme.model.PostDTO;
 import org.acme.model.Tag;
+import org.acme.model.TagDTO;
 import org.acme.service.BlogService;
 
 @Path("/api")
@@ -39,11 +40,12 @@ public class BlogController {
 	@Path("/posts/{id}")
 	public PostDTO getPost(@PathParam("id") Long id){
 		Post post = blogService.getPost(id);
-		PostDTO postDTO = null;
+		
 		if (post != null) {
-			postDTO = new PostDTO(post);
+			PostDTO postDTO = new PostDTO(post);
+			return postDTO;
 		}
-		return postDTO;
+		return null;
 	}
 	
 	@POST
@@ -76,10 +78,55 @@ public class BlogController {
 	
 	@GET
 	@Path("/tags")
-	public List<Tag> tags(){
-		return blogService.getTags();
+	public List<TagDTO> getTags(){
+		List <Tag> tags = blogService.getTags();
+		List <TagDTO> tagsDTO = new ArrayList<>();
+		
+		for (Tag t : tags) {
+			TagDTO tagDTO = new TagDTO(t);
+			tagsDTO.add(tagDTO);
+		}
+		
+		return tagsDTO;
 	}
 	
+	@GET
+	@Path("/tags/{id}")
+	public TagDTO getTag(@PathParam("id") Long id){
+		Tag tag = blogService.getTag(id);
+		
+		if (tag != null) {
+			TagDTO tagDTO = new TagDTO(tag);
+			return tagDTO;
+		} else
+			return null;
+	}
+	
+	@POST
+	@Path("/tags")
+	public List<TagDTO>  addTag(TagDTO tagDTO) {
+		Tag tag = new Tag(tagDTO);
+		blogService.addTag(tag);
+		
+		return getTags();
+	}
+	
+	@PUT
+	@Path("/tags/{id}")
+	public TagDTO updateTag(@PathParam("id") Long id, TagDTO tagDTO){
+		Tag tag = new Tag(tagDTO);
+		blogService.updateTag(id, tag);		
+		
+		return getTag(id);
+	}
+	
+	@DELETE
+	@Path("/tags/{id}")
+	public List<TagDTO>  deleteTag(@PathParam("id") Long id){
+		blogService.deleteTag(id);
+		
+		return getTags(); 
+	}
 
 }
 

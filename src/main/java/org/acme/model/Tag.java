@@ -21,7 +21,13 @@ public class Tag {
 	@ManyToMany(mappedBy = "tags", cascade = {CascadeType.MERGE})
     private List<Post> posts = new ArrayList<>();
 	
+	public Tag() {
+	}
 	
+	public Tag(TagDTO tagDTO) {
+		this.label = tagDTO.label;
+	}
+
 	public long getId() {
 		return id;
 	}

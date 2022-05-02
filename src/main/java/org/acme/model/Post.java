@@ -33,7 +33,6 @@ public class Post {
 	public Post(PostDTO postDTO, Map<String, Long> tagMap) {
 		this.title = postDTO.getTitle();
 		this.content = postDTO.getContent();
-		this.tags = new ArrayList<>();
 		if (postDTO.getTags() != null) {
 			for (String label : postDTO.getTags()) {		
 				Tag tag = new Tag();

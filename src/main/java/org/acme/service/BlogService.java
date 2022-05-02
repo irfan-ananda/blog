@@ -1,7 +1,5 @@
 package org.acme.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +10,6 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import org.acme.model.Post;
-import org.acme.model.PostDTO;
 import org.acme.model.Tag;
 
 
@@ -22,9 +19,6 @@ public class BlogService {
 	
 	@Inject
     EntityManager entityManager;
-	
-	private static Map<String, Long> tagMap = new HashMap<>();
-	
 	
 	public List<Post> getPosts(){
 		return entityManager.createQuery("select p from Post p", Post.class).getResultList();		
@@ -42,7 +36,7 @@ public class BlogService {
 	@Transactional
 	public void updatePost(Long id, Post post) {
 		Post postToUpdate = getPost(id);
-		if (post != null) {			
+		if (postToUpdate != null) {			
 			postToUpdate.setTitle(post.getTitle());
 			postToUpdate.setContent(post.getContent());
 			postToUpdate.setTags(post.getTags());
@@ -66,13 +60,29 @@ public class BlogService {
 		return entityManager.createNamedQuery("Tag.findAll", Tag.class).getResultList();
 	}
 	
-//	@Transactional
-	public void addTag(String label){
-		System.out.println("====addTag===");
-		Tag tag = new Tag();
-		tag.setLabel(label);
+	public Tag getTag(Long id) {
+		return entityManager.find(Tag.class, id);
+	}
+	
+	@Transactional
+	public void addTag(Tag tag){
 		entityManager.persist(tag);
 	}
+	
+	@Transactional
+	public void updateTag(Long id, Tag tag){
+		Tag tagToUpdate = getTag(id);
+		if (tagToUpdate != null) 
+			tagToUpdate.setLabel(tag.getLabel());
+	}
+	
+	@Transactional
+	public void deleteTag(Long id) {
+		Tag tag = getTag(id);
+		entityManager.remove(tag);
+	}
+	
+
 	
 	public void fetchTag(Map<String, Long> tagMap) {
 		System.out.println("====fetchTag===");
@@ -82,6 +92,7 @@ public class BlogService {
 			tagMap.put(t.getLabel(), t.getId());
 		}
 	}
+
 
 
 }
